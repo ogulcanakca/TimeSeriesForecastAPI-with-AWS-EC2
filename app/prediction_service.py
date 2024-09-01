@@ -5,10 +5,11 @@ from app.model import ModelHandler
 from app.utils import validate_csv, preprocess_data, create_time_steps
 from app.config import Config
 
+
 class PredictionService:
     def __init__(self):
         self.model_handler = ModelHandler()
-    
+
     async def process_file(self, file):
         try:
             contents = await file.read()
