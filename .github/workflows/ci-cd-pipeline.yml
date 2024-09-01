@@ -45,7 +45,7 @@ jobs:
     - name: Deploy to Server
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-        cd ./docker-compose.yml
+        cd /home/ubuntu/TimeSeriesForecastAPI-withServer/docker-compose.yml
         docker-compose pull
         docker-compose up -d
         EOF
