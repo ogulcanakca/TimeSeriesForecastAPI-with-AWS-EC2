@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    image: ogulcanakca/stock-prediction-app
+    container_name: stock-prediction-app-container-compose
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./model:/app/model
+      - ./scaler:/app/scaler
+    environment:
+      - ENV_VAR=value
+    env_file:
+      - .env
