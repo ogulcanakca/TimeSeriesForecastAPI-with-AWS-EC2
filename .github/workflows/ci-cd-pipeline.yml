@@ -44,11 +44,17 @@ jobs:
       run: |
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         docker push ogulcanakca/stock-prediction-app-for-server
-        
+
     - name: Deploy to Server
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-        cd /home/ubuntu/TimeSeriesForecastAPI-withServer/docker-compose.yml
+        echo "${{ secrets.SSH_KEY }}" | ssh -o StrictHostKeyChecking=no -i /dev/stdin ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        if [ ! -d "/home/ogulcanakca/TimeSeriesForecastAPI-withServer" ]; then
+          git clone https://github.com/ogulcanakca/TimeSeriesForecastAPI-withServer.git /home/ogulcanakca/TimeSeriesForecastAPI-withServer
+        else
+          cd /home/ogulcanakca/TimeSeriesForecastAPI-withServer
+          git pull origin main
+        fi
+        cd /home/ogulcanakca/TimeSeriesForecastAPI-withServer
         docker-compose pull
         docker-compose up -d
         EOF
