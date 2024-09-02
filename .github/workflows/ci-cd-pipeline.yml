@@ -25,7 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r ./requirements/requirements_app.txt
-        pip install pytest  
+        pip install pytest
 
     - name: Lint with flake8
       run: |
@@ -33,7 +33,9 @@ jobs:
         flake8 .
 
     - name: Run tests
-      run: pytest
+      run: |
+        export PYTHONPATH=.
+        pytest
 
     - name: Build Docker image
       run: docker build -t ogulcanakca/stock-prediction-app-for-server .
