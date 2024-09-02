@@ -26,8 +26,8 @@ def validate_csv(file_contents):
 
     except Exception as e:
         raise ValueError(
-            "An unexpected error occurred while processing the CSV file. Error: "
-            + str(e)
+            "An unexpected error occurred while processing the CSV file. "
+            "Error: " + str(e)
         )
 
 
@@ -37,7 +37,9 @@ def preprocess_data(df):
 
     for column in required_columns:
         if column not in df_columns_lower:
-            raise ValueError(f"Required column '{column}' not found in the CSV file.")
+            raise ValueError(
+                f"Required column '{column}' not found in the CSV file."
+            )
 
     df.columns = [col.lower().strip() for col in df.columns]
     df = df[required_columns]
@@ -64,7 +66,7 @@ def create_time_steps(data, time_step=None):
             f"Not enough data. Minimum number of required data: {time_step}."
         )
 
-    X = [data[i : i + time_step] for i in range(len(data) - time_step)]
+    X = [data[i:i + time_step] for i in range(len(data) - time_step)]
     return np.array(X)
 
 
