@@ -22,7 +22,8 @@ def validate_csv(file_contents):
         raise ValueError("Invalid CSV file format.")
 
     except UnicodeDecodeError:
-        raise ValueError("Unable to decode the CSV file, check the file encoding.")
+        raise ValueError(
+            "Unable to decode the CSV file, check the file encoding.")
 
     except Exception as e:
         raise ValueError(
