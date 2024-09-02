@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     libgomp1 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Gereksinimlerin kurulumu
 COPY requirements/requirements_app.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
