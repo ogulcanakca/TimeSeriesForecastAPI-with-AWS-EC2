@@ -47,7 +47,7 @@ jobs:
 
     - name: Deploy to Server
       run: |
-        echo "${{ secrets.SSH_KEY }}" | ssh -o StrictHostKeyChecking=no -i /dev/stdin ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        echo "${{ secrets.SSH_KEY }}" | ssh -o StrictHostKeyChecking=no -p 2222 -i /dev/stdin ${{ secrets.SSH_USER }}@basebuntuserver.chickenkiller.com<< 'EOF'
         if [ ! -d "/home/ogulcanakca/TimeSeriesForecastAPI-withServer" ]; then
           git clone https://github.com/ogulcanakca/TimeSeriesForecastAPI-withServer.git /home/ogulcanakca/TimeSeriesForecastAPI-withServer
         else
