@@ -47,7 +47,9 @@ jobs:
 
     - name: Deploy to AWS EC2
       run: |
-        echo "${{ secrets.SSH_KEY }}" | ssh -o StrictHostKeyChecking=no -i /dev/stdin ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        echo "${{ secrets.SSH_KEY }}" > /tmp/id_rsa
+        chmod 600 /tmp/id_rsa
+        ssh -o StrictHostKeyChecking=no -i /tmp/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
         if [ ! -d "/home/ogulcanakca/TimeSeriesForecastAPI-withServer" ]; then
           git clone https://github.com/ogulcanakca/TimeSeriesForecastAPI-withServer.git /home/ogulcanakca/TimeSeriesForecastAPI-withServer
         else
@@ -62,3 +64,4 @@ jobs:
         SSH_KEY: ${{ secrets.SSH_KEY }}
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_HOST: ${{ secrets.SSH_HOST }}
+        
