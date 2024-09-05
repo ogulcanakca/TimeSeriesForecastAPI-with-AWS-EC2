@@ -56,11 +56,11 @@ jobs:
           git pull origin main
         fi
         cd /home/ubuntu/TimeSeriesForecastAPI-withServer
-        if [ -f "docker-compose.yml" ]; then
+        if [ -f "docker-compose.yaml" ]; then
           docker-compose pull
           docker-compose up -d
         else
-          echo "docker-compose.yml file not found!"
+          echo "docker-compose.yaml file not found!"
           exit 1
         fi
         EOF
