@@ -11,5 +11,3 @@ services:
       - ./scaler:/app/scaler
     environment:
       - ENV_VAR=value
-    env_file:
-      - .env
