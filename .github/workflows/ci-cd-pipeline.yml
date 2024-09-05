@@ -45,16 +45,16 @@ jobs:
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         docker push ogulcanakca/stock-prediction-app-for-server
 
-    - name: Deploy to Server
+    - name: Deploy to AWS EC2 Server
       run: |
-        echo "${{ secrets.SSH_KEY }}" | ssh -o StrictHostKeyChecking=no -p 2222 -i /dev/stdin ${{ secrets.SSH_USER }}@192.168.1.50<< 'EOF'
-        if [ ! -d "/home/ogulcanakca/TimeSeriesForecastAPI-withServer" ]; then
-          git clone https://github.com/ogulcanakca/TimeSeriesForecastAPI-withServer.git /home/ogulcanakca/TimeSeriesForecastAPI-withServer
+        echo "${{ secrets.SSH_KEY }}" | ssh -o StrictHostKeyChecking=no -i /dev/stdin ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}<< 'EOF'
+        if [ ! -d "/home/ubuntu/TimeSeriesForecastAPI-withServer" ]; then
+          git clone https://github.com/ogulcanakca/TimeSeriesForecastAPI-withServer.git /home/ubuntu/TimeSeriesForecastAPI-withServer
         else
-          cd /home/ogulcanakca/TimeSeriesForecastAPI-withServer
+          cd /home/ubuntu/TimeSeriesForecastAPI-withServer
           git pull origin main
         fi
-        cd /home/ogulcanakca/TimeSeriesForecastAPI-withServer
+        cd /home/ubuntu/TimeSeriesForecastAPI-withServer
         docker-compose pull
         docker-compose up -d
         EOF
