@@ -50,17 +50,14 @@ jobs:
         echo "${{ secrets.SSH_KEY }}" > /tmp/id_rsa
         chmod 600 /tmp/id_rsa
         ssh -o StrictHostKeyChecking=no -i /tmp/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-        # Create directory if it doesn't exist
-        mkdir -p /home/ogulcanakca/TimeSeriesForecastAPI-withServer
-        # Change to the target directory
-        cd /home/ogulcanakca/TimeSeriesForecastAPI-withServer
-        
-        if [ ! -d ".git" ]; then
-          git clone https://github.com/ogulcanakca/TimeSeriesForecastAPI-withServer.git .
+        if [ ! -d "/home/ubuntu/TimeSeriesForecastAPI-withServer" ]; then
+          mkdir -p /home/ubuntu/TimeSeriesForecastAPI-withServer
+          git clone https://github.com/ogulcanakca/TimeSeriesForecastAPI-withServer.git /home/ubuntu/TimeSeriesForecastAPI-withServer
         else
+          cd /home/ubuntu/TimeSeriesForecastAPI-withServer
           git pull origin main
         fi
-        
+        cd /home/ubuntu/TimeSeriesForecastAPI-withServer
         docker-compose pull
         docker-compose up -d
         EOF
@@ -68,3 +65,7 @@ jobs:
         SSH_KEY: ${{ secrets.SSH_KEY }}
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_HOST: ${{ secrets.SSH_HOST }}
+        
+
+
+        
