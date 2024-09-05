@@ -21,6 +21,15 @@ jobs:
       with:
         python-version: 3.12
 
+    - name: Cache Python packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/pip
+        key: ${{ runner.os }}-python-${{ hashFiles('**/requirements/*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-python-
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -37,18 +46,24 @@ jobs:
         export PYTHONPATH=.
         pytest
 
-    - name: Build Docker image
-      run: docker build -t ogulcanakca/stock-prediction-app-for-server .
-
-    - name: Push to Docker Hub
+    - name: Build Docker image with BuildKit
       run: |
+        DOCKER_BUILDKIT=1 docker build --cache-from=ogulcanakca/stock-prediction-app-for-server -t ogulcanakca/stock-prediction-app-for-server:${{ github.sha }} .
+
+    - name: Push Docker images to Docker Hub
+      run: |
+        IMAGE_TAG="ogulcanakca/stock-prediction-app-for-server:${{ github.sha }}"
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker push ogulcanakca/stock-prediction-app-for-server
+        docker tag $IMAGE_TAG ogulcanakca/stock-prediction-app-for-server:latest
+        docker push $IMAGE_TAG
+        docker push ogulcanakca/stock-prediction-app-for-server:latest
+
     - name: Deploy to AWS EC2
       run: |
         echo "${{ secrets.SSH_KEY }}" > /tmp/id_rsa
         chmod 600 /tmp/id_rsa
-        ssh -t -o StrictHostKeyChecking=no -i /tmp/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=yes -i /tmp/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        set -e
         if [ ! -d "/home/ubuntu/TimeSeriesForecastAPI-withServer" ]; then
           git clone git@github.com:ogulcanakca/TimeSeriesForecastAPI-withServer.git /home/ubuntu/TimeSeriesForecastAPI-withServer
         fi
@@ -62,10 +77,4 @@ jobs:
           exit 1
         fi
         EOF
-      env:
-        SSH_KEY: ${{ secrets.SSH_KEY }}
-        SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-    
-
-        
+        rm /tmp/id_rsa
