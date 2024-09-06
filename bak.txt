@@ -1,0 +1,11 @@
+venv\Scripts\activate
+python -m app.main
+
+
+başka terminal aç
+
+venv\Scripts\activate
+cd app/frontend
+python -m http.server 8080
+http://localhost:8080/
+a git.
