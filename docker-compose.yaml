@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   app:
-    image: ogulcanakca/stock-prediction-app
-    container_name: stock-prediction-app-container-compose
+    image: ogulcanakca/stock-prediction-app-for-AWS-EC2
+    container_name: stock-prediction-app-container-compose-for-AWS-EC2
     ports:
       - "8000:8000" #For API
       - "80:80" #For frontend
