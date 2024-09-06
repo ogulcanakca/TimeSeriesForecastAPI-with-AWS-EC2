@@ -1,4 +1,5 @@
 # app/main.py
+
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.prediction_service import PredictionService
@@ -19,6 +20,7 @@ app.add_middleware(
 )
 
 prediction_service = PredictionService()
+
 
 @app.post("/predict/", response_model=dict)
 async def predict(file: UploadFile = File(...)):
