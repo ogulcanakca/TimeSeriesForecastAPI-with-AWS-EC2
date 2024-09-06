@@ -48,25 +48,25 @@ jobs:
 
     - name: Build Docker image with BuildKit
       run: |
-        DOCKER_BUILDKIT=1 docker build --cache-from=ogulcanakca/stock-prediction-app-for-AWS-EC2 -t ogulcanakca/stock-prediction-app-for-AWS-EC2:${{ github.sha }} .
+        DOCKER_BUILDKIT=1 docker build --cache-from=ogulcanakca/stock-prediction-app-for-aws-ec2 -t ogulcanakca/stock-prediction-app-for-aws-ec2:${{ github.sha }} .
 
     - name: Push Docker images to Docker Hub
       run: |
-        IMAGE_TAG="ogulcanakca/stock-prediction-app-for-AWS-EC2:${{ github.sha }}"
+        IMAGE_TAG="ogulcanakca/stock-prediction-app-for-aws-ec2:${{ github.sha }}"
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker tag $IMAGE_TAG ogulcanakca/stock-prediction-app-for-AWS-EC2:latest
+        docker tag $IMAGE_TAG ogulcanakca/stock-prediction-app-for-aws-ec2:latest
         docker push $IMAGE_TAG
-        docker push ogulcanakca/stock-prediction-app-for-AWS-EC2:latest
+        docker push ogulcanakca/stock-prediction-app-for-aws-ec2:latest
 
     - name: Deploy to AWS EC2
       run: |
         echo "${{ secrets.SSH_KEY }}" > /tmp/id_rsa
         chmod 600 /tmp/id_rsa
         ssh -t -o StrictHostKeyChecking=no -i /tmp/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-        if [ ! -d "/home/ubuntu/TimeSeriesForecastAPI-with-AWS-EC2" ]; then
-          git clone git@github.com:ogulcanakca/TimeSeriesForecastAPI-with-AWS-EC2.git /home/ubuntu/TimeSeriesForecastAPI-with-AWS-EC2
+        if [ ! -d "/home/ubuntu/TimeSeriesForecastAPI-with-aws-ec2" ]; then
+          git clone git@github.com:ogulcanakca/TimeSeriesForecastAPI-with-AWS-EC2.git /home/ubuntu/TimeSeriesForecastAPI-with-aws-ec2
         fi
-        cd /home/ubuntu/TimeSeriesForecastAPI-with-AWS-EC2
+        cd /home/ubuntu/TimeSeriesForecastAPI-with-aws-ec2
         git pull origin main
         if [ -f "docker-compose.yaml" ]; then
           docker-compose pull
